@@ -16,4 +16,5 @@ const (
 	ErrorAuthCheckTokenTimeout = 30002
 	ErrorAuthToken             = 30003
 	ErrorAuth                  = 30004
+	ErrorId                    = 30005
 )

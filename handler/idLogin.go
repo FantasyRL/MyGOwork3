@@ -8,6 +8,7 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"net/http"
+	"strconv"
 )
 
 var identityKey = "id"
@@ -19,15 +20,23 @@ func IdLogin(ctx context.Context, c *app.RequestContext) {
 	count := 0
 	Dao.DB.Model(&user).Where("user_name=?", identity.(*service.UserService).UserName).First(&user).Count(&count)
 	if count == 0 {
-		c.JSON(http.StatusOK, model.Response{
+		c.JSON(http.StatusBadRequest, model.Response{
 			Status: e.ErrorNotExistUser,
 			Msg:    id,
 		})
 	} else {
-		c.JSON(http.StatusOK, model.Response{
-			Status: e.SUCCESS,
-			Msg:    id,
-		})
+		if id == strconv.Itoa(int(user.ID)) {
+			c.JSON(http.StatusBadRequest, model.Response{
+				Status: e.SUCCESS,
+				Data:   model.BuildUser(user),
+				Msg:    "登录成功",
+			})
+		} else {
+			c.JSON(http.StatusBadRequest, model.Response{
+				Status: e.ErrorId,
+				Msg:    "用户id错误",
+			})
+		}
 	}
 
 	//user, _ := c.Get(identityKey)

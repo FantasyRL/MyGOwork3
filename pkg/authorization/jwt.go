@@ -4,16 +4,15 @@ import (
 	"ToDoList/handler"
 	"ToDoList/model"
 	"ToDoList/pkg/e"
+	"ToDoList/service"
 	"context"
 	"fmt"
+	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"
+	"github.com/hertz-contrib/jwt"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
-
-	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/hertz-contrib/jwt"
 )
 
 var identityKey = "id"
@@ -21,7 +20,7 @@ var identityKey = "id"
 func TestHandler(c context.Context, ctx *app.RequestContext) {
 	user, _ := ctx.Get(identityKey)
 	ctx.JSON(200, utils.H{
-		"message": fmt.Sprintf("username:%v", user.(*model.User).UserName),
+		"message": fmt.Sprintf("username:%v", user.(*service.UserService).UserName),
 	})
 }
 func JWT() *jwt.HertzJWTMiddleware {
@@ -38,31 +37,31 @@ func JWT() *jwt.HertzJWTMiddleware {
 		//用于设置登录时为 token 添加自定义负载信息的函数，如果不传入这个参数，
 		//则 token 的 payload 部分默认存储 token 的过期时间和创建时间，
 		//如下则额外存储了username
-		//PayloadFunc: func(data interface{}) jwt.MapClaims {
-		//	if v, ok := data.(*service.UserService); ok {
-		//		return jwt.MapClaims{
-		//			identityKey: v.UserName,
-		//		}
-		//	}
-		//	return jwt.MapClaims{}
-		//},
+		PayloadFunc: func(data interface{}) jwt.MapClaims {
+			if v, ok := data.(*service.UserService); ok {
+				return jwt.MapClaims{
+					identityKey: v.UserName,
+				}
+			}
+			return jwt.MapClaims{}
+		},
 
 		//通过在 IdentityHandler 内配合使用 identityKey，将存储用户信息的 token 从请求
 		//上下文中取出并提取需要的信息，封装成 User 结构，以 identityKey 为 key，
 		//User 为 value 存入请求上下文当中以备后续使用。
-		//IdentityHandler: func(ctx context.Context, c *app.RequestContext) interface{} {
-		//	claims := jwt.ExtractClaims(ctx, c)
-		//	return &service.UserService{
-		//		UserName: claims[identityKey].(string),
-		//	}
-		//},
+		IdentityHandler: func(ctx context.Context, c *app.RequestContext) interface{} {
+			claims := jwt.ExtractClaims(ctx, c)
+			return &service.UserService{
+				UserName: claims[identityKey].(string),
+			}
+		},
 
 		/*Login Handler*/
 		//登录时触发，用于认证用户的登录信息。
 		Authenticator: func(ctx context.Context, c *app.RequestContext) (interface{}, error) {
 			data, err, res := handler.UserLogin(ctx, c)
 			loginRes = res
-			if err == nil && res.Status == e.SUCCESS {
+			if err == nil && loginRes.Status == e.SUCCESS {
 				return data, nil
 			}
 			return nil, jwt.ErrFailedAuthentication
@@ -79,21 +78,19 @@ func JWT() *jwt.HertzJWTMiddleware {
 		},
 		//Unauthorized 用于设置 jwt 授权失败后的响应函数，
 		Unauthorized: func(ctx context.Context, c *app.RequestContext, code int, message string) {
-			c.JSON(code, model.TokenResponse{
-				Status: e.ErrorAuthToken,
-				Msg:    "登录失败",
+			c.JSON(code, map[string]interface{}{
+				"code":    code,
+				"message": message,
 			})
 		},
 
 		//用于验证用户是否有访问权限
-		//可用于区分是否为管理员
-		Authorizator: func(data interface{}, ctx context.Context, c *app.RequestContext) bool {
-			id := c.Param("id")
-			if v, ok := data.(*model.User); ok && strconv.Itoa(int(v.ID)) == id {
-				return true
-			}
-			return false
-		},
+		//Authorizator: func(data interface{}, ctx context.Context, c *app.RequestContext) bool {
+		//	if _, ok := data.(*service.UserService); ok {
+		//		return true
+		//	}
+		//	return false
+		//},
 	})
 	if err != nil {
 		log.Fatal("JWT Error:" + err.Error())
