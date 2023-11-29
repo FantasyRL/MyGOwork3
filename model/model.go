@@ -14,7 +14,7 @@ type TokenResponse struct {
 	Expire string      `json:"expire"`
 }
 
-//type TokenData struct {
-//	User  User   `json:"user"`
-//	Token string `json:"token"`
-//}
+type ErrorResponse struct {
+	Status int    `json:"status"`
+	Msg    string `json:"msg"`
+}

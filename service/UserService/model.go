@@ -1,4 +1,4 @@
-package service
+package UserService
 
 type UserService struct {
 	UserName string `form:"user_name" json:"user_name" binding:"required,min=4,max=15"`

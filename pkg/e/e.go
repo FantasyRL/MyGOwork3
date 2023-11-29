@@ -11,6 +11,12 @@ const (
 	ErrorPassword       = 10007
 
 	ErrorDatabase = 40001
+	ErrorCreate   = 40002
+	ErrorCheck    = 40003
+	ErrorList     = 40003
+	ErrorSearch   = 40005
+	ErrorUpdate   = 40006
+	ErrorDelete   = 40007
 
 	ErrorAuthCheckTokenFail    = 30001
 	ErrorAuthCheckTokenTimeout = 30002

@@ -1,10 +1,10 @@
 package jwt
 
 import (
-	"ToDoList/handler"
+	"ToDoList/handler/userHandler"
 	"ToDoList/model"
 	"ToDoList/pkg/e"
-	"ToDoList/service"
+	"ToDoList/service/UserService"
 	"context"
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -20,7 +20,7 @@ var identityKey = "id"
 func TestHandler(c context.Context, ctx *app.RequestContext) {
 	user, _ := ctx.Get(identityKey)
 	ctx.JSON(200, utils.H{
-		"message": fmt.Sprintf("username:%v", user.(*service.UserService).UserName),
+		"message": fmt.Sprintf("username:%v", user.(*UserService.UserService).UserName),
 	})
 }
 func JWT() *jwt.HertzJWTMiddleware {
@@ -38,20 +38,19 @@ func JWT() *jwt.HertzJWTMiddleware {
 		//则 token 的 payload 部分默认存储 token 的过期时间和创建时间，
 		//如下则额外存储了username
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if v, ok := data.(*service.UserService); ok {
+			if v, ok := data.(*UserService.UserService); ok {
 				return jwt.MapClaims{
 					identityKey: v.UserName,
 				}
 			}
 			return jwt.MapClaims{}
 		},
-
 		//通过在 IdentityHandler 内配合使用 identityKey，将存储用户信息的 token 从请求
 		//上下文中取出并提取需要的信息，封装成 User 结构，以 identityKey 为 key，
 		//User 为 value 存入请求上下文当中以备后续使用。
 		IdentityHandler: func(ctx context.Context, c *app.RequestContext) interface{} {
 			claims := jwt.ExtractClaims(ctx, c)
-			return &service.UserService{
+			return &UserService.UserService{
 				UserName: claims[identityKey].(string),
 			}
 		},
@@ -59,7 +58,7 @@ func JWT() *jwt.HertzJWTMiddleware {
 		/*Login Handler*/
 		//登录时触发，用于认证用户的登录信息。
 		Authenticator: func(ctx context.Context, c *app.RequestContext) (interface{}, error) {
-			data, err, res := handler.UserLogin(ctx, c)
+			data, err, res := userHandler.UserLogin(ctx, c)
 			loginRes = res
 			if err == nil && loginRes.Status == e.SUCCESS {
 				return data, nil
