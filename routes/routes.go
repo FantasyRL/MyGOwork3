@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"ToDoList/handler/adminHandler"
 	"ToDoList/handler/taskHandler"
 	"ToDoList/handler/userHandler"
 	jwt "ToDoList/pkg/authorization"
@@ -29,7 +30,7 @@ func Router() *server.Hertz {
 	auth.Use(mw.MiddlewareFunc())
 	{
 		//auth.GET("/test", jwt.TestHandler)
-		//尝试实现带着id来访问 成功了!
+		//实现id访问
 		auth.GET("/:id", userHandler.IdLogin) //test
 		auth.POST("/:id/task/create", taskHandler.CreateTask)
 		auth.GET("/:id/task/:tid", taskHandler.CheckTask)
@@ -37,7 +38,14 @@ func Router() *server.Hertz {
 		auth.POST("/:id/task/search", taskHandler.SearchTask)
 		auth.PUT("/:id/task/:tid", taskHandler.UpdateTask)
 		auth.DELETE("/:id/task/:tid", taskHandler.DeleteTask)
-	}
 
+	}
+	admin := v1.Group("/admin")
+	admin.Use(mw.MiddlewareFunc())
+	{
+		admin.POST("/listusers", adminHandler.ListUsers) //todo:adminModel
+		admin.GET("/add/:id", adminHandler.AddAdmin)     //todo:addAdmin
+		//todo:blockUser
+	}
 	return h
 }

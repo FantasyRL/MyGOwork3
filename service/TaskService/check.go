@@ -18,6 +18,8 @@ func (service *CheckTaskService) Check(uid uint, tid int) model.Response {
 			Msg:    "不存在这个tid或已被删除喵",
 		}
 	} else {
+		task.View++
+		Dao.DB.Save(&task)
 		return model.Response{
 			Status: e.SUCCESS,
 			Data:   model.BuildTask(task),

@@ -10,6 +10,7 @@ type UserDao struct {
 	UserName       string `gorm:"unique"`
 	PasswordDigest string //存储加密后的密码
 	TidCount       int
+	Status         int `gorm:"default:'0'"` //用户状态 0正常 1封禁 114514管理员
 }
 
 type User struct {

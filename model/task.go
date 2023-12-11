@@ -11,6 +11,7 @@ type TaskDao struct {
 	Tid       int     `gorm:"not null"`
 	Uid       uint    `gorm:"not null"`
 	Title     string  `gorm:"index;not null"`
+	View      int     `gorm:"default:'0'"`
 	Status    int     `gorm:"default:'0'"` //0未完成 1已完成
 	Content   string  `gorm:"type:longtext"`
 	StartTime string
@@ -22,6 +23,7 @@ type Task struct {
 	Uid       uint   `gorm:"not null"`
 	Tid       int    `json:"tid" form:"tid"`
 	Title     string `json:"title" form:"title"`
+	View      int    `json:"view" form:"view"`
 	Status    int    `json:"status" form:"status"` //0未完成 1已完成
 	Content   string `json:"content" form:"content"`
 	StartTime string `json:"start_time" form:"start_time"`
@@ -35,16 +37,9 @@ func BuildTask(task TaskDao) Task {
 		Tid:       task.Tid,
 		Title:     task.Title,
 		Status:    task.Status,
+		View:      task.View,
 		Content:   task.Content,
 		StartTime: task.StartTime,
 		EndTime:   task.EndTime,
 	}
-}
-
-func BuildTasks(tasks []TaskDao) []Task {
-	var Tasks []Task
-	for _, task := range tasks {
-		Tasks = append(Tasks, BuildTask(task))
-	}
-	return Tasks
 }

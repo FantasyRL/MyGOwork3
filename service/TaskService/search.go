@@ -21,10 +21,16 @@ func (service *SearchTaskService) Search(uid uint) model.Response {
 			Msg:    "查找失败",
 		}
 	}
+	var Tasks []model.Task
+	for _, task := range tasks {
+		task.View++
+		Dao.DB.Save(&task)
+		Tasks = append(Tasks, model.BuildTask(task))
+	}
 	return model.Response{
 		Status: e.SUCCESS,
 		Data: utils.H{
-			"DataList": model.BuildTasks(tasks),
+			"DataList": Tasks,
 			"total":    count,
 		},
 		Msg: "查找成功",
