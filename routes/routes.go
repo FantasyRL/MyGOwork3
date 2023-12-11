@@ -45,7 +45,7 @@ func Router() *server.Hertz {
 	{
 		admin.POST("/listusers", adminHandler.ListUsers)
 		admin.GET("/add/:id", adminHandler.AddAdmin)
-		admin.GET("/block/:id")
+		admin.GET("/block/:id",adminHandler.BlockUser)
 	}
 	return h
 }
