@@ -10,6 +10,14 @@ import (
 	"strconv"
 )
 
+// @Summary DeleteTask
+// @Description DeleteTask
+// @Accept json/form
+// @Produce json
+// @Success 200 {object} model.Response "成功"
+// @Failure 400 {object} e.InvalidParams "请求错误"
+// @Failure 500 {object} e.ERROR "内部错误"
+// @Router /auth/:id/task/:tid [DELETE]
 func DeleteTask(ctx context.Context, c *app.RequestContext) {
 	id := c.Param("id")
 	txtId := c.Param("tid")

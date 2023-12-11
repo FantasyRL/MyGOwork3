@@ -26,7 +26,7 @@ func Router() *server.Hertz {
 		v1.POST("user/register", userHandler.UserRegister)
 		v1.POST("user/login", mw.LoginHandler) //Hertz JWT:Authenticator
 	}
-	auth := v1.Group("/auth")
+	auth := v1.Group("auth")
 	auth.Use(mw.MiddlewareFunc())
 	{
 		//auth.GET("/test", jwt.TestHandler)
@@ -40,12 +40,12 @@ func Router() *server.Hertz {
 		auth.DELETE("/:id/task/:tid", taskHandler.DeleteTask)
 
 	}
-	admin := v1.Group("/admin")
+	admin := v1.Group("admin")
 	admin.Use(mw.MiddlewareFunc())
 	{
 		admin.POST("/listusers", adminHandler.ListUsers)
 		admin.GET("/add/:id", adminHandler.AddAdmin)
-		admin.GET("/block/:id",adminHandler.BlockUser)
+		admin.GET("/block/:id", adminHandler.BlockUser)
 	}
 	return h
 }

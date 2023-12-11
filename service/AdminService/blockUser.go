@@ -21,11 +21,18 @@ func (service *BlockUserService) Block(id string) model.Response {
 			Msg:    "用户不存在",
 		}
 	}
-	user.Status = 1
-	Dao.DB.Save(&user)
-	return model.Response{
-		Status: e.SUCCESS,
-		Data:   model.BuildUser(user),
-		Msg:    "封禁成功",
+	if user.Status == 0 {
+		user.Status = 1
+		Dao.DB.Save(&user)
+		return model.Response{
+			Status: e.SUCCESS,
+			Data:   model.BuildUser(user),
+			Msg:    "封禁成功",
+		}
 	}
+	return model.Response{
+		Status: e.InvalidParams,
+		Msg:    "用户已封禁或为管理员",
+	}
+
 }
