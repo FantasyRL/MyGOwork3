@@ -7,7 +7,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/utils"
 )
 
-func (service *ListUsers) List() model.Response {
+func (service *ListUsersService) List() model.Response {
 	var users []model.UserDao
 	count := 0
 	if service.PageSize == 0 {

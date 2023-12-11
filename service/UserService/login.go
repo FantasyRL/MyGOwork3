@@ -22,6 +22,12 @@ func (service *UserService) Login() model.Response {
 			Msg:    "密码错误",
 		}
 	}
+	if user.Status == 1 {
+		return model.Response{
+			Status: e.ERROR,
+			Msg:    "用户被封禁",
+		}
+	}
 	return model.Response{
 		Status: e.SUCCESS,
 		Data:   model.BuildUser(user),

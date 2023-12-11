@@ -45,7 +45,7 @@ func IdTask(ctx context.Context, c *app.RequestContext) bool {
 	var user model.UserDao
 	count := 0
 	Dao.DB.Model(&user).Where("user_name=?", identity.(*UserService.UserService).UserName).First(&user).Count(&count)
-	if count == 0 {
+	if count == 0 || user.Status == 1 {
 		return false
 	} else {
 		if id == strconv.Itoa(int(user.ID)) {

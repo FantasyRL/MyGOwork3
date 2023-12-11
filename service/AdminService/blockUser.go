@@ -6,10 +6,10 @@ import (
 	"ToDoList/pkg/e"
 )
 
-func (service *AddAdminService) AddAdmin(id string) model.Response {
+func (service *BlockUserService) Block(id string) model.Response {
 	var user model.UserDao
 	count := 0
-	if err := Dao.DB.Model(&model.UserDao{}).Where("id=?", id).First(&user).Count(&count).Error; err != nil {
+	if err := Dao.DB.Model(&model.UserDao{}).Where("id = ?", id).Count(&count).First(&user).Error; err != nil {
 		return model.Response{
 			Status: e.ErrorDatabase,
 			Msg:    "数据库错误",
@@ -18,14 +18,14 @@ func (service *AddAdminService) AddAdmin(id string) model.Response {
 	if count == 0 {
 		return model.Response{
 			Status: e.ErrorNotExistUser,
-			Msg:    "不存在此用户",
+			Msg:    "用户不存在",
 		}
 	}
-	user.Status = 114514
+	user.Status = 1
 	Dao.DB.Save(&user)
 	return model.Response{
 		Status: e.SUCCESS,
 		Data:   model.BuildUser(user),
-		Msg:    "添加管理员成功",
+		Msg:    "封禁成功",
 	}
 }

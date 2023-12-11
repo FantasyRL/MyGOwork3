@@ -43,9 +43,9 @@ func Router() *server.Hertz {
 	admin := v1.Group("/admin")
 	admin.Use(mw.MiddlewareFunc())
 	{
-		admin.POST("/listusers", adminHandler.ListUsers) //todo:adminModel
-		admin.GET("/add/:id", adminHandler.AddAdmin)     //todo:addAdmin
-		//todo:blockUser
+		admin.POST("/listusers", adminHandler.ListUsers)
+		admin.GET("/add/:id", adminHandler.AddAdmin)
+		admin.GET("/block/:id")
 	}
 	return h
 }

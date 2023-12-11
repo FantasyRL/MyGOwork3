@@ -8,7 +8,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
-func ListUsers(ctx context.Context, c *app.RequestContext) {
+func BlockUser(ctx context.Context, c *app.RequestContext) {
 	if !adminLogin(ctx, c) {
 		c.JSON(e.InvalidParams, model.ErrorResponse{
 			Status: e.ErrorAuth,
@@ -16,13 +16,8 @@ func ListUsers(ctx context.Context, c *app.RequestContext) {
 		})
 		return
 	}
-	var listUsers AdminService.ListUsersService
-	if err := c.BindAndValidate(&listUsers); err != nil {
-		c.JSON(e.InvalidParams, model.ErrorResponse{
-			Status: e.ERROR,
-		})
-	} else {
-		res := listUsers.List()
-		c.JSON(e.SUCCESS, res)
-	}
+	id := c.Param("id")
+	var blockUser AdminService.BlockUserService
+	res := blockUser.Block(id)
+	c.JSON(200, res)
 }

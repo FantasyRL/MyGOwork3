@@ -17,7 +17,7 @@ func AddAdmin(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	id := c.Param("id")
-	var addAdmin AdminService.AddAdmin
+	var addAdmin AdminService.AddAdminService
 	res := addAdmin.AddAdmin(id)
 	c.JSON(200, res)
 }
