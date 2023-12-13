@@ -12,11 +12,11 @@ import (
 // @Description Login
 // @Accept json/form
 // @Produce json
-// @Param user_name string true "用户名" minlength(4) maxlength(15)
-// @Param password string true "密码" minlength(6) maxlength(32)
+// @Param user_name query string true "用户名" minlength(4) maxlength(15)
+// @Param password query string true "密码" minlength(6) maxlength(32)
 // @Success 200 {object} model.Response "成功"
-// @Failure 400 {object} e.InvalidParams "请求错误"
-// @Failure 500 {object} e.ERROR "内部错误"
+// @Failure 400 {object} model.ErrorResponse "请求错误"
+// @Failure 500 {object} model.ErrorResponse "内部错误"
 // @Router /user/login [POST]
 func UserLogin(ctx context.Context, c *app.RequestContext) (*UserService.UserService, error, model.Response) {
 	var userLogin UserService.UserService

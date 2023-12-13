@@ -14,12 +14,12 @@ import (
 // @Description ListTask
 // @Accept json/form
 // @Produce json
-// @Param page_num int false "页码"
-// @Param page_size int false "每页所展示清单数量"
+// @Param id path string true "用户id"
+// @Param page_num query int false "页码"
+// @Param page_size query int false "每页所展示清单数量"
 // @Success 200 {object} model.Response "成功"
-// @Failure 400 {object} e.InvalidParams "请求错误"
-// @Failure 500 {object} e.ERROR "内部错误"
-// @Router /auth/:id/tasks [POST]
+// @Failure 400 {object} model.ErrorResponse "请求错误"
+// @Router /auth/{id}/tasks [POST]
 func ListTask(ctx context.Context, c *app.RequestContext) {
 	if !userHandler.IdTask(ctx, c) {
 		c.JSON(e.InvalidParams, model.ErrorResponse{

@@ -9,6 +9,9 @@ import (
 	"github.com/hertz-contrib/logger/accesslog"
 	"github.com/hertz-contrib/sessions"
 	"github.com/hertz-contrib/sessions/cookie"
+	"github.com/hertz-contrib/swagger"
+	_ "github.com/hertz-contrib/swagger/example/basic/docs"
+	swaggerFiles "github.com/swaggo/files"
 )
 
 func Router() *server.Hertz {
@@ -47,5 +50,7 @@ func Router() *server.Hertz {
 		admin.GET("/add/:id", adminHandler.AddAdmin)
 		admin.GET("/block/:id", adminHandler.BlockUser)
 	}
+	url := swagger.URL("http://localhost:8000/swagger/doc.json") // The url pointing to API definition
+	h.GET("/swagger/*any", swagger.WrapHandler(swaggerFiles.Handler, url))
 	return h
 }

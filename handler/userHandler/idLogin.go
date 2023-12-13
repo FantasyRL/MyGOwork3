@@ -16,16 +16,22 @@ var identityKey = "id"
 // @Description idLogin
 // @Accept json/form
 // @Produce json
+// @Param id path string true "用户id"
 // @Success 200 {object} model.Response "成功"
-// @Failure 400 {object} e.InvalidParams "请求错误"
-// @Failure 500 {object} e.ERROR "内部错误"
-// @Router /auth/:id [GET]
+// @Failure 400 {object} model.ErrorResponse "请求错误"
+// @Failure 500 {object} model.ErrorResponse "内部错误"
+// @Router /auth/{id} [GET]
 func IdLogin(ctx context.Context, c *app.RequestContext) {
 	id := c.Param("id")
 	identity, _ := c.Get(identityKey)
 	var user model.UserDao
 	count := 0
-	Dao.DB.Model(&user).Where("user_name=?", identity.(*UserService.UserService).UserName).First(&user).Count(&count)
+	if err := Dao.DB.Model(&user).Where("user_name=?", identity.(*UserService.UserService).UserName).First(&user).Count(&count).Error; err != nil {
+		c.JSON(e.ERROR, model.ErrorResponse{
+			Status: e.ErrorDatabase,
+			Msg:    "数据库错误",
+		})
+	}
 	if count == 0 {
 		c.JSON(e.InvalidParams, model.ErrorResponse{
 			Status: e.ErrorNotExistUser,

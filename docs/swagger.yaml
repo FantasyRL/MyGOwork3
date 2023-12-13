@@ -1,0 +1,397 @@
+basePath: /todolist
+definitions:
+  model.ErrorResponse:
+    properties:
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
+  model.Response:
+    properties:
+      data: {}
+      error:
+        type: string
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: CRUD your todoList
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: TodoList
+  version: "1.0"
+paths:
+  /admin/add/{id}:
+    get:
+      consumes:
+      - json/form
+      description: AddAdmin
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: AddAdmin
+  /admin/block/{id}:
+    get:
+      consumes:
+      - json/form
+      description: BlockUser
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: BlockUser
+  /admin/listusers:
+    post:
+      consumes:
+      - json/form
+      description: ListUsers
+      parameters:
+      - description: 页码
+        in: query
+        name: page_num
+        type: integer
+      - description: 每页所展示清单数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: ListUsers
+  /auth/{id}:
+    get:
+      consumes:
+      - json/form
+      description: idLogin
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: idLogin test
+  /auth/{id}/task/{tid}:
+    delete:
+      consumes:
+      - json/form
+      description: DeleteTask
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 文章id
+        in: path
+        name: tid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: DeleteTask
+    get:
+      consumes:
+      - json/form
+      description: CheckTask
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 文章id
+        in: path
+        name: tid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: CheckTask
+    put:
+      consumes:
+      - json/form
+      description: UpdateTask
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 文章id
+        in: path
+        name: tid
+        required: true
+        type: string
+      - description: 标题
+        in: query
+        name: title
+        required: true
+        type: string
+      - description: 正文
+        in: query
+        name: content
+        required: true
+        type: string
+      - description: 状态
+        in: query
+        name: status
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: UpdateTask
+  /auth/{id}/task/create:
+    post:
+      consumes:
+      - json/form
+      description: CreateTask
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 标题
+        in: query
+        name: title
+        required: true
+        type: string
+      - description: 正文
+        in: query
+        name: content
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: CreateTask
+  /auth/{id}/task/search:
+    post:
+      consumes:
+      - json/form
+      description: SearchTask
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 查询字段
+        in: query
+        name: information
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: page_num
+        type: integer
+      - description: 每页所展示清单数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: SearchTask
+  /auth/{id}/tasks:
+    post:
+      consumes:
+      - json/form
+      description: ListTask
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: page_num
+        type: integer
+      - description: 每页所展示清单数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: ListTask
+  /user/login:
+    post:
+      consumes:
+      - json/form
+      description: Login
+      parameters:
+      - description: 用户名
+        in: query
+        maxLength: 15
+        minLength: 4
+        name: user_name
+        required: true
+        type: string
+      - description: 密码
+        in: query
+        maxLength: 32
+        minLength: 6
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: UserLogin
+  /user/register:
+    post:
+      consumes:
+      - json/form
+      description: Register
+      parameters:
+      - description: 用户名
+        in: query
+        maxLength: 15
+        minLength: 4
+        name: user_name
+        required: true
+        type: string
+      - description: 密码
+        in: query
+        maxLength: 32
+        minLength: 6
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: UserRegister
+swagger: "2.0"

@@ -14,10 +14,11 @@ import (
 // @Description CheckTask
 // @Accept json/form
 // @Produce json
+// @Param id path string true "用户id"
+// @Param tid path string true "文章id"
 // @Success 200 {object} model.Response "成功"
-// @Failure 400 {object} e.InvalidParams "请求错误"
-// @Failure 500 {object} e.ERROR "内部错误"
-// @Router /auth/:id/task/:tid[GET]
+// @Failure 400 {object} model.ErrorResponse "请求错误"
+// @Router /auth/{id}/task/{tid} [GET]
 func CheckTask(ctx context.Context, c *app.RequestContext) {
 	id := c.Param("id")
 	txtId := c.Param("tid")
