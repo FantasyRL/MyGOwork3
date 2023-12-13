@@ -1,6 +1,7 @@
 package routes
 
 import (
+	_ "ToDoList/docs"
 	"ToDoList/handler/adminHandler"
 	"ToDoList/handler/taskHandler"
 	"ToDoList/handler/userHandler"
@@ -10,7 +11,6 @@ import (
 	"github.com/hertz-contrib/sessions"
 	"github.com/hertz-contrib/sessions/cookie"
 	"github.com/hertz-contrib/swagger"
-	_ "github.com/hertz-contrib/swagger/example/basic/docs"
 	swaggerFiles "github.com/swaggo/files"
 )
 

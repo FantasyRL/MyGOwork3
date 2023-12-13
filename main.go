@@ -2,8 +2,8 @@ package main
 
 import (
 	"ToDoList/conf"
+	_ "ToDoList/docs"
 	"ToDoList/routes"
-	_ "github.com/hertz-contrib/swagger/example/basic/docs"
 )
 
 // @title           TodoList
